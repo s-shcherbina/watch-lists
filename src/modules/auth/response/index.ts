@@ -1,7 +1,12 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from 'src/modules/users/models/user.models';
 
 export class UserResponse {
+  @ApiProperty()
+  @IsNumber()
+  id: number;
+
   @ApiProperty()
   @IsString()
   firstName: string;
@@ -17,7 +22,7 @@ export class UserResponse {
 
 export class AuthUserResponse {
   @ApiProperty()
-  user: UserResponse;
+  user: User;
 
   @ApiProperty()
   @IsString()
