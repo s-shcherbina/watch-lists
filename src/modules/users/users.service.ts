@@ -4,6 +4,7 @@ import { compare, hash } from 'bcrypt';
 import { AppError } from 'src/common/constans/errors';
 import { AuthUserResponse, UserResponse } from '../auth/response';
 import { TokenService } from '../token/token.service';
+import { Watchlist } from '../watchlist/models/watchlist.model';
 import { CreateUserDTO, UpdatePasswordDTO, UpdateUserDTO } from './dto';
 import { User } from './models/user.models';
 
@@ -51,15 +52,16 @@ export class UsersService {
     try {
       const user = await this.userRepository.findOne({
         where: { email },
-        attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
-        // include: {
-        //   model: Watchlist,
-        //   required: false,
-        // },
+        attributes: { exclude: ['password'] },
+        include: {
+          model: Watchlist,
+          required: false,
+        },
       });
-      const token = await this.tokenService.generateJwtToken(
-        user as UserResponse,
-      );
+      const { id, firstName, username } = user;
+      const userData = { id, firstName, username, email };
+      const token = await this.tokenService.generateJwtToken(userData);
+
       return { user, token };
     } catch (e) {
       throw new Error(e);

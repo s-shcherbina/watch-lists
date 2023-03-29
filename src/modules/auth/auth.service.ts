@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { UserLoginDTO } from './dto';
 import { AuthUserResponse } from './response';
@@ -32,7 +36,7 @@ export class AuthService {
       if (!validatePassword) throw new BadRequestException(AppError.WRONG_DATA);
       return this.userService.publicUser(dto.email);
     } catch (e) {
-      throw new Error(e);
+      // throw new Error(e);
     }
   }
 }
